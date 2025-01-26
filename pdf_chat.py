@@ -9,9 +9,18 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Template for generating concise answers using retrieved context
 PROMPT_TEMPLATE = """
-You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+You are an AI assistant specialized in answering questions based on retrieved text from PDF documents.
+Your goal is to produce a concise answer using only the provided context. 
+If the context does not contain enough information, respond with "I don't know."
+
+Instruction Guidelines:
+• Limit your response to three sentences maximum.
+• Be precise and factual.
+• Do not provide information not supported by the context.
+
 Question: {question}
 Context: {context}
+
 Answer:
 """
 
