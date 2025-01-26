@@ -7,9 +7,15 @@ from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+# Template for generating concise answers using retrieved context
 PROMPT_TEMPLATE = """
+You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+Question: {question}
+Context: {context}
+Answer:
 """
 
+# Directory where uploaded PDF files will be stored
 PDFS_DIRECTORY = 'chat-with-pdf/pdf_files/'
 
 # Initialize embeddings, vector store, and LLM model
