@@ -12,23 +12,49 @@ PROMPT_TEMPLATE = """
 
 PDFS_DIRECTORY = 'chat-with-pdf/pdf_files/'
 
+# Initialize embeddings, vector store, and LLM model
 ollama_embeddings = OllamaEmbeddings(model="deepseek-r1:14b")
 vector_store = InMemoryVectorStore(ollama_embeddings)
 ollama_model = OllamaLLM(model="deepseek-r1:14b")
 
 
 def save_uploaded_pdf(uploaded_file):
+    """
+    Save the uploaded PDF file to the PDFs directory.
+
+    Args:
+        uploaded_file (UploadedFile): A file-like object representing the uploaded PDF.
+    """
     with open(PDFS_DIRECTORY + uploaded_file.name, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
 
 def load_pdf_content(file_path):
+    """
+    Load the PDF content from the specified file path using PDFPlumberLoader.
+
+    Args:
+        file_path (str): The path to the PDF file.
+
+    Returns:
+        list: A list of Document objects containing the PDF's text.
+    """
     file_loader = PDFPlumberLoader(file_path)
     documents = file_loader.load()
     return documents
 
 
 def split_documents_into_chunks(documents):
+    """
+    Split documents into smaller chunks to improve vector search and retrieval performance.
+
+    Args:
+        documents (list): A list of Document objects.
+
+    Returns:
+        list: A list of Document objects, each containing a chunk of text.
+    """
+    # The chunk size is set to 1000 tokens/characters, with an overlap of 200
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200,
@@ -38,22 +64,50 @@ def split_documents_into_chunks(documents):
 
 
 def index_document_chunks(document_chunks):
+    """
+    Index the chunked documents in the vector store for later retrieval.
+
+    Args:
+        document_chunks (list): A list of chunked Document objects.
+    """
     vector_store.add_documents(document_chunks)
 
 
 def search_documents(query):
+    """
+    Retrieve the most relevant documents from the vector store given a query.
+
+    Args:
+        query (str): The user's query.
+
+    Returns:
+        list: A list of the most relevant Document objects.
+    """
     return vector_store.similarity_search(query)
 
 
 def generate_answer(question, relevant_docs):
+    """
+    Generate an answer to the user's question using the provided relevant documents.
+
+    Args:
+        question (str): The question asked by the user.
+        relevant_docs (list): A list of Document objects deemed relevant to the question.
+
+    Returns:
+        str: The generated answer text.
+    """
+    # Concatenate the content from all relevant documents
     context_text = "\n\n".join([doc.page_content for doc in relevant_docs])
 
+    # Create a prompt and chain it with the language model
     prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     question_answer_chain = prompt | ollama_model
 
     return question_answer_chain.invoke({"question": question, "context": context_text})
 
 
+# Streamlit UI setup
 uploaded_file = st.file_uploader(
     "Upload PDF",
     type="pdf",
