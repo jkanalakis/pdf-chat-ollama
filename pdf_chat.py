@@ -54,3 +54,26 @@ def generate_answer(question, relevant_docs):
     return question_answer_chain.invoke({"question": question, "context": context_text})
 
 
+uploaded_file = st.file_uploader(
+    "Upload PDF",
+    type="pdf",
+    accept_multiple_files=False
+)
+
+if uploaded_file:
+    # Save and process the uploaded PDF
+    save_uploaded_pdf(uploaded_file)
+    documents = load_pdf_content(PDFS_DIRECTORY + uploaded_file.name)
+    chunked_documents = split_documents_into_chunks(documents)
+    index_document_chunks(chunked_documents)
+
+    # Chat interface for question answering
+    user_question = st.chat_input()
+    if user_question:
+        st.chat_message("user").write(user_question)
+
+        # Retrieve relevant documents and generate an answer
+        found_documents = search_documents(user_question)
+        answer = generate_answer(user_question, found_documents)
+
+        st.chat_message("assistant").write(answer)
