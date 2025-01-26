@@ -17,13 +17,15 @@ A PDF-based question-answering application built with [Streamlit](https://stream
 Make sure you have a recent version of Python installed on your machine.
 2.	**Ollama**
 This app depends on Ollama’s language models. Refer to Ollama’s documentation for instructions on how to install and configure it.
-3.	**DeepSeek Model**
-The default model used is deepseek-r1:14b. Make sure you have it set up and accessible to Ollama.
+3.	**DeepSeek-R1-Distill-Qwen-14B Model**
+The default model used is deepseek-r1:14b since it balances good results with reasonable performance on most laptop computers. You can find more details about this model on the [Ollama deepseek-r1 Website](https://ollama.com/library/deepseek-r1). Make sure you have it set up and accessible to Ollama. You can download the model by running:
+
+	`ollama pull DeepSeek-R1-Distill-Qwen-14B`
 
 ### Installation
 1.	Clone this repository:
 
-	`git clone https://github.com/yourusername/pdf-qa-ollama.git`
+	`git clone https://github.com/jkanalakis/pdf-chat-ollama.git`
 
 
 2.	Navigate to the project directory:
@@ -34,8 +36,6 @@ The default model used is deepseek-r1:14b. Make sure you have it set up and acce
 3.	Install Python dependencies (example shown with pip):
 
 	`pip install -r requirements.txt`
-
-If you use a different package manager (e.g., Poetry) or a virtual environment, adapt as needed.
 
 ## Running the Application
 
