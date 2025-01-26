@@ -16,7 +16,7 @@ Answer:
 """
 
 # Directory where uploaded PDF files will be stored
-PDFS_DIRECTORY = 'pdf-chat-ollama/pdf_files/'
+PDFS_DIRECTORY = 'pdf_files/'
 
 # Initialize embeddings, vector store, and LLM model
 ollama_embeddings = OllamaEmbeddings(model="deepseek-r1:14b")
